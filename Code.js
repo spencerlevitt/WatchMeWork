@@ -12,7 +12,7 @@ function onOpen() {
  */
 function showSidebar() {
   DocumentApp.getUi().showSidebar(
-    HtmlService.createTemplateFromFile('Sidebar').evaluate()
+    HtmlService.createTemplateFromFile('sidebar').evaluate()
       .setTitle('Cursor Inspector')
       .setWidth(350));
 }
