@@ -38,48 +38,51 @@
       <form>
         <div class="block col-contain">
           <div class="col-one">
-            <b>Selected text</b>
+            <b>Research Topic</b>
             <div>
               <input type="radio" name="origin" id="radio-origin-auto" value="" checked="checked">
-              <label for="radio-origin-auto">Auto-detect</label>
+              <label for="radio-origin-topic-1">Topic 1</label>
             </div>
             <div>
               <input type="radio" name="origin" id="radio-origin-en" value="en">
-              <label for="radio-origin-en">English</label>
+              <label for="radio-origin-topic-2">Topic 2</label>
             </div>
             <div>
               <input type="radio" name="origin" id="radio-origin-fr" value="fr">
-              <label for="radio-origin-fr">French</label>
-            </div>
-            <div>
-              <input type="radio" name="origin" id="radio-origin-de" value="de">
-              <label for="radio-origin-de">German</label>
-            </div>
-            <div>
-              <input type="radio" name="origin" id="radio-origin-ja" value="ja">
-              <label for="radio-origin-ja">Japanese</label>
-            </div>
-            <div>
-              <input type="radio" name="origin" id="radio-origin-es" value="es">
-              <label for="radio-origin-es">Spanish</label>
+              <label for="radio-origin-topic-3">Topic 3</label>
             </div>
           </div>
         </div>
 		<div class="block form-group">
-          <label for="research-resource"><b>Source One</b></label>
+		  <span>
+		  Filler words<br>
+		  Filler words<br>
+		  Filler words<br>
+		  Filler words<br>
+		  Filler words<br>
+		  Filler words<br>
+		  Filler words<br>
+		  Filler words<br>
+		  Filler words<br>
+		  Filler words<br>
+		  <span>
+		  <!--
+          <label for="research-source"><b>Source</b></label>
           <textarea class="width-100" id="research-resource" rows="10"></textarea>
+		  -->
         </div>
         <div class="block form-group">
-          <label for="translated-text"><b>Translation</b></label>
-          <textarea class="width-100" id="translated-text" rows="10"></textarea>
+          <label for="research-term"><b>Further Research</b></label>
+          <textarea class="width-100" id="research-text" rows="1"></textarea>
         </div>
+		<!--
         <div class="block">
           <input type="checkbox" id="save-prefs">
           <label for="save-prefs">Use these languages by default</label>
         </div>
-        <div class="block" id="button-bar">
-          <button class="blue" id="run-translation">Translate</button>
-          <button id="insert-text">Insert</button>
+		-->
+		<div class="block" id="button-bar">
+          <button class="blue" id="run-translation">Research</button>
         </div>
       </form>
     </div>
@@ -163,7 +166,7 @@
             .insertText($('#translated-text').val());
       }
 
-      /**
+      /**in
        * Inserts a div that contains an error message after a given element.
        *
        * @param {string} msg The error message to display.
