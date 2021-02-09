@@ -35,7 +35,14 @@ module.exports = {
   },
   plugins: [
     new CopyPlugin({
-      patterns: ["server/api.js", "Code.js", "appsscript.json", ".clasp.json"],
+      patterns: [
+        "server/api.js",
+        "sidebar.html",
+        "sidebar.css.html",
+        "Code.js",
+        "appsscript.json",
+        ".clasp.json",
+      ],
     }),
   ],
 };

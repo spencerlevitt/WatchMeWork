@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "gas": "webpack --config webpack.gas.js ",
-    "deploy": "npm run gas && cd dist && clasp push && clasp open --webapp"
+    "deploy": "npm run gas && cd dist && clasp push"
   },
   "author": "",
   "license": "ISC",
