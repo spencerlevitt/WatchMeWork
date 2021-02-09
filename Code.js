@@ -68,3 +68,11 @@ function getElementInfo(element) {
     type: String(element.getType())
   };
 }
+
+// /**
+//  * Sets research text from Britannica API.
+//  * @param {Element} element The element.
+//  */
+// function runResearch(element) {
+//   element.innerHTML = "Hello world";
+// }
