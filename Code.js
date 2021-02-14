@@ -69,10 +69,13 @@ function getElementInfo(element) {
   };
 }
 
-// /**
-//  * Sets research text from Britannica API.
-//  * @param {Element} element The element.
-//  */
-// function runResearch(element) {
-//   element.innerHTML = "Hello world";
-// }
+/**
+ * Retrieves research output.
+ *
+ * @return {Object} Object containing the output of the research.
+ */
+function getResearch() {
+  return {
+    output: "Hello world"
+  };
+}
