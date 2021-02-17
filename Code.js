@@ -75,7 +75,25 @@ function getElementInfo(element) {
  * @return {Object} Object containing the output of the research.
  */
 function getResearch() {
-  return {
-    output: "Hello world"
-  };
+  // let request = new XMLHTTPRequest();
+  // request.open('GET', 'https://uraqwfo1nd.execute-api.us-east-1.amazonaws.com/api/search?search_string={Obama}&key=vQZIl7B3kFfHloC6BTOXd1NYqan1ouZ2');
+  // // request.setRequestHeader('x-api-key', '9HeBB23LR4a8mruNNf3kq17fFuR9b4JP1q5KSMCC');
+  // request.send();
+  
+  let url = 'https://uraqwfo1nd.execute-api.us-east-1.amazonaws.com/api/search?search_string=northwestern%20university&key=vQZIl7B3kFfHloC6BTOXd1NYqan1ouZ2';
+//   fetch(url)
+//     .then(response => response.json())
+//     .then(data => {
+//       console.log(data)
+//     })
+// } 
+  loadJSON(url, gotBritData);
+  function gotBritData(data) {
+    println(data);
+  }
+
+
+//   return {
+//     output: "Hello world !"
+//   };
 }
