@@ -1,4 +1,5 @@
 import * as moment from "moment";
+import * as keyword_extractor from "keyword-extractor";
 
 function getObjectValues() {
   let options = Object.assign(
@@ -14,4 +15,13 @@ function getTodaysDateLongForm() {
   return moment().format("LLLL");
 }
 
-export { getObjectValues, getTodaysDateLongForm };
+function getKeywords(string) {
+  return keyword_extractor.extract(string, {
+    language: "english",
+    remove_digits: true,
+    return_changed_case: true,
+    remove_duplicates: true,
+  });
+}
+
+export { getObjectValues, getTodaysDateLongForm, getKeywords };

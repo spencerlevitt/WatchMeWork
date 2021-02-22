@@ -9,6 +9,14 @@ function onOpen() {
   Logger.log(AppLib.getTodaysDateLongForm());
 }
 
+function testKeywordExtraction() {
+  Logger.log(
+    AppLib.getKeywords(
+      "President Obama woke up Monday facing a Congressional defeat that many in both parties believed could hobble his presidency."
+    )
+  );
+}
+
 /**
  * Show the sidebar.
  */

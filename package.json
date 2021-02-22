@@ -12,6 +12,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
     "@types/google-apps-script": "^1.0.22",
+    "keyword-extractor": "0.0.19",
     "moment": "^2.29.1"
   },
   "devDependencies": {
