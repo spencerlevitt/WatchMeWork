@@ -1,5 +1,6 @@
 import * as moment from "moment";
 import * as keyword_extractor from "keyword-extractor";
+var nlp = require("compromise");
 
 function getObjectValues() {
   let options = Object.assign(
@@ -24,4 +25,23 @@ function getKeywords(string) {
   });
 }
 
-export { getObjectValues, getTodaysDateLongForm, getKeywords };
+function getTopics(string) {
+  let doc = nlp(string);
+  return JSON.stringify(doc.topics().out("array"), null, 2);
+}
+
+function getPropers(string) {
+  let doc = nlp(string);
+  const people = doc.people().json();
+  const places = doc.places().json();
+  const organizations = doc.organizations().json();
+  return { people, places, organizations };
+}
+
+export {
+  getObjectValues,
+  getTodaysDateLongForm,
+  getKeywords,
+  getTopics,
+  getPropers,
+};
