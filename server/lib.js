@@ -27,7 +27,7 @@ function getKeywords(string) {
 
 function getTopics(string) {
   let doc = nlp(string);
-  return JSON.stringify(doc.topics().out("array"), null, 2);
+  return JSON.parse(JSON.stringify(doc.topics().out("array"), null, 2));
 }
 
 function getPropers(string) {

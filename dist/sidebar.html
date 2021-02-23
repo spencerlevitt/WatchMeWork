@@ -36,62 +36,21 @@
   <body>
     <div class="sidebar branding-below">
       <form>
-        <div class="block col-contain">
-          <div class="col-one">
-            <b>Research Topic</b>
-            <div>
-              <input type="radio" name="origin" id="radio-origin-auto" value="" checked="checked">
-              <label for="radio-origin-topic-1">Topic 1</label>
-            </div>
-            <div>
-              <input type="radio" name="origin" id="radio-origin-en" value="en">
-              <label for="radio-origin-topic-2">Topic 2</label>
-            </div>
-            <div>
-              <input type="radio" name="origin" id="radio-origin-fr" value="fr">
-              <label for="radio-origin-topic-3">Topic 3</label>
-            </div>
-          </div>
+        <!-- <div class="block form-group" style="text-align:center;">
+          <label for="research-query"><b>Research Query</b></label>
+          <textarea class="width-100" id="research-query" rows="1"></textarea>
+        </div> -->
+        <div class="block form-group" style="text-align:center;">
+          <label for="research-text"><b >Research</b></label>
+          <p class="width-100" id="research-text" rows="10"> Highlight a word to learn more </p>
+          <a id='research-URL'> </a>
         </div>
-		<div class="block form-group">
-		  <span>
-		  Filler words<br>
-		  Filler words<br>
-		  Filler words<br>
-		  Filler words<br>
-		  Filler words<br>
-		  Filler words<br>
-		  Filler words<br>
-		  Filler words<br>
-		  Filler words<br>
-		  Filler words<br>
-		  <span>
-		  <!--
-          <label for="research-source"><b>Source</b></label>
-          <textarea class="width-100" id="research-resource" rows="10"></textarea>
-		  -->
-        </div>
-        <div class="block form-group">
-          <label for="research-term"><b>Further Research</b></label>
-          <textarea class="width-100" id="research-text" rows="1"></textarea>
-        </div>
-		<!--
-        <div class="block">
-          <input type="checkbox" id="save-prefs">
-          <label for="save-prefs">Use these languages by default</label>
-        </div>
-		-->
-		<div class="block" id="button-bar">
-          <button class="blue" id="run-translation">Research</button>
+        <div class="block" id="button-bar">
+          <button class="blue" id="run-translation">WatchMeWork!</button>
         </div>
       </form>
     </div>
-	<!--
-    <div class="sidebar bottom">
-      <img alt="Add-on logo" class="logo" src="https://www.gstatic.com/images/branding/product/1x/translate_48dp.png" width="27" height="27">
-      <span class="gray branding-text">Translate sample by Google</span>
-    </div>
-	-->
+
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>
       /**
@@ -99,32 +58,14 @@
        * user's origin and destination language preferences if previously set.
        */
       $(function() {
-        $('#run-translation').click(runTranslation);
-        $('#insert-text').click(insertText);
-        google.script.run.withSuccessHandler(loadPreferences)
-            .withFailureHandler(showError).getPreferences();
+        $('#run-translation').click(runResearch);
       });
 
       /**
-       * Callback function that populates the origin and destination selection
-       * boxes with user preferences from the server.
-       *
-       * @param {Object} languagePrefs The saved origin and destination languages.
-       */
-      function loadPreferences(languagePrefs) {
-        $('input:radio[name="origin"]')
-            .filter('[value=' + languagePrefs.originLang + ']')
-            .attr('checked', true);
-        $('input:radio[name="dest"]')
-            .filter('[value=' + languagePrefs.destLang + ']')
-            .attr('checked', true);
-      }
-
-      /**
-       * Runs a server-side function to translate the user-selected text and update
+       * Runs a server-side function to research the text and update
        * the sidebar UI with the resulting translation.
        */
-      function runTranslation() {
+      function runResearch() {
         this.disabled = true;
         $('#error').remove();
         var origin = $('input[name=origin]:checked').val();
@@ -132,8 +73,10 @@
         var savePrefs = $('#save-prefs').is(':checked');
         google.script.run
             .withSuccessHandler(
-              function(textAndTranslation, element) {
-                $('#translated-text').val(textAndTranslation.translation);
+              function(research, element) {
+                $('#research-text').text(research.output[0]);
+                $('#research-URL').text('Read More!');
+                $('#research-URL').attr("href", research.output[1]);
                 element.disabled = false;
               })
             .withFailureHandler(
@@ -142,40 +85,11 @@
                 element.disabled = false;
               })
             .withUserObject(this)
-            .getTextAndTranslation(origin, dest, savePrefs);
-      }
-
-      /**
-       * Runs a server-side function to insert the translated text into the document
-       * at the user's cursor or selection.
-       */
-      function insertText() {
-        this.disabled = true;
-        $('#error').remove();
-        google.script.run
-            .withSuccessHandler(
-              function(returnSuccess, element) {
-                element.disabled = false;
-              })
-            .withFailureHandler(
-              function(msg, element) {
-                showError(msg, $('#button-bar'));
-                element.disabled = false;
-              })
-            .withUserObject(this)
-            .insertText($('#translated-text').val());
-      }
-
-      /**in
-       * Inserts a div that contains an error message after a given element.
-       *
-       * @param {string} msg The error message to display.
-       * @param {DOMElement} element The element after which to display the error.
-       */
-      function showError(msg, element) {
-        var div = $('<div id="error" class="error">' + msg + '</div>');
-        $(element).after(div);
-      }
+            .getResearch(); //returns an array [article_description, article_url]
+      }  
+ 
     </script>
+
+    
   </body>
 </html>
