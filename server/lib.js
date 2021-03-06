@@ -1,5 +1,6 @@
 import * as moment from "moment";
 import * as keyword_extractor from "keyword-extractor";
+import * as lodash from "lodash";
 var nlp = require("compromise");
 
 function getObjectValues() {
