@@ -3,6 +3,7 @@
   <head>
     <base target="_top">
     <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- The CSS package above applies Google styling to buttons and other elements. -->
 
     <style>
@@ -36,17 +37,45 @@
   <body>
     <div class="sidebar branding-below">
       <form>
-        <!-- <div class="block form-group" style="text-align:center;">
-          <label for="research-query"><b>Research Query</b></label>
-          <textarea class="width-100" id="research-query" rows="1"></textarea>
-        </div> -->
-        <div class="block form-group" style="text-align:center;">
-          <label for="research-text"><b >Research</b></label>
-          <p class="width-100" id="research-text" rows="10"> Highlight a word to learn more </p>
+        <div class="block form-inline">
+          <input type="text" placeholder="Search..." style="border-radius:10px" size="34px">
+          <span class="fa fa-search" style="color:blue; border-radius:10px"></span>
+        </div>
+        <div class="block form-group">
+          <p style="font-size:15px"><b>Topics</b></p>
+          <p style="display: inline-block">
+            <i class="fa fa-star"></i>
+            <b>&emsp;<a>Cholesterol</a></b>
+            <br><i>&emsp;&emsp;You wrote about this.</i>
+          </p>
+          <p style="display: inline-block">
+            <i class="fa fa-star"></i>
+            <b>&emsp;<a>Atheroscierosis</a></b>
+            <br><i>&emsp;&emsp;Suggested.</i>
+          </p>
+        </div>
+        <div class="block form-group">
+          <label for="research-text" style="font-size:15px"><b>Research</b></label>
+          <p class="width-100" id="research-term" style="font-size:15px"><b>Your Topic</b></p>
+          <p class="width-100" id="research-text" rows="10"> Learn more about your project. </p>
           <a id='research-URL'> </a>
         </div>
-        <div class="block" id="button-bar">
+        <div class="block" id="button-bar" style="text-align:center">
           <button class="blue" id="run-translation">WatchMeWork!</button>
+        </div>
+        
+        <div class="block form-group">
+          <p style="font-size:15px"><b>Related</b></p>
+          <p style="display: inline-block">
+            <i class="fa fa-star"></i>
+            <b>&emsp;<a>Related Topic Here.</a></b>
+            <br><i>&emsp;&emsp;Suggested.</i>
+          </p>
+          <p style="display: inline-block">
+            <i class="fa fa-star"></i>
+            <b>&emsp;<a>Related Topic Here.</a></b>
+            <br><i>&emsp;&emsp;Suggested.</i>
+          </p>
         </div>
       </form>
     </div>
