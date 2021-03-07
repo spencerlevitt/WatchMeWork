@@ -251,4 +251,8 @@ function fetchIndividualKeyword(keyword) {
     Logger.log(keywordArr);
     documentProperties.setProperty("KEYWORD_ARR", JSON.stringify(keywordArr));
   }
+
+  return {
+    output: first_three
+  };
 }

@@ -38,7 +38,7 @@
     <div class="sidebar branding-below">
       <form>
         <div class="block form-inline">
-          <input type="text" placeholder="Search..." style="border-radius:10px" size="32px">
+          <input type="text" placeholder="Search..." style="border-radius:10px" size="32px" id="search-term">
           <span class="fa fa-search" style="color:blue; border-radius:10px"></span>
         </div>
         <div class="block form-group">
@@ -75,18 +75,18 @@
         </div>
         
         <div class="block form-group">
-          <p style="font-size:15px"><b>Related</b></p>
+          <p style="font-size:15px"><b>Related Terms</b></p>
           <p style="display: inline-block">
             <i class="fa fa-star"></i>
-            <b>&emsp;<a>Related Topic Here.</a></b>
+            <b>&emsp;<a id="related-0">Related Topic Here.</a></b>
             <br><i>&emsp;&emsp;Suggested.</i>
           </p>
+          <br>
           <p style="display: inline-block">
             <i class="fa fa-star"></i>
-            <b>&emsp;<a>Related Topic Here.</a></b>
+            <b>&emsp;<a id="related-1">Related Topic Here.</a></b>
             <br><i>&emsp;&emsp;Suggested.</i>
           </p>
-          <p id='related-keywords'></p>
         </div>
       </form>
     </div>
@@ -99,6 +99,7 @@
        */
       $(function() {
         $('#run-research').click(runResearch);
+        $('#run-research').click(runRelated);
       });
 
       /**
@@ -134,6 +135,24 @@
               })
             .withUserObject(this)
             .getResearch(); //returns an array [article_description, article_url]
+      }
+
+      function runRelated() {
+        google.script.run
+            .withSuccessHandler(
+              function(related) {
+                $('#related-0').text(related.output[0].title);
+                $('#related-0').attr("href", related.output[0].url);
+
+                $('#related-1').text(related.output[1].title);
+                $('#related-1').attr("href", related.output[1].url);
+              })
+            .withFailureHandler(
+              function(msg, element) {
+                showError(msg, $('#button-bar'));
+              })
+            .withUserObject(this)
+            .fetchIndividualKeyword($('#search-term').val());
       }
  
     </script>
