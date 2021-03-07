@@ -1,7 +1,7 @@
 /**
  * Runs when the document is opened.
  */
-function onOpen() {
+ function onOpen() {
   DocumentApp.getUi()
     .createMenu("Inspector")
     .addItem("Show sidebar", "showSidebar")
@@ -38,7 +38,7 @@ function showSidebar() {
   DocumentApp.getUi().showSidebar(
     HtmlService.createTemplateFromFile("sidebar")
       .evaluate()
-      .setTitle("Cursor Inspector")
+      .setTitle("Watch Me Work")
       .setWidth(350)
   );
 }
@@ -143,10 +143,20 @@ function getResearch() {
   var data = JSON.parse(json);
 
   if (data.totalResults == 0) {
-    side_bar_content = ["No data available :( ... back to work ", ""];
-    Logger.log(side_bar_content);
+    // side_bar_content = ["No data available :( ... back to work ", ""];
+    // Logger.log(side_bar_content);
+    let first_three = [];
+    while (first_three.length < 3) {
+      first_three.push({
+        title: "No data available :( ... back to work",
+        url: ""
+    });
+    }
+    // return {
+    //   output: side_bar_content,
+    // };
     return {
-      output: side_bar_content,
+      output: first_three,
     };
   }
 
@@ -170,13 +180,20 @@ function getResearch() {
     JSON.stringify(savedKeywordArr)
   );
 
-  side_bar_content[0] = first_article;
-  side_bar_content[1] = first_article_URL;
+  while (first_three.length < 3) {
+    first_three.push({
+      title: "No data available :( ... back to work",
+      url: ""
+    });
+  }
+
+  // side_bar_content[0] = first_article;
+  // side_bar_content[1] = first_article_URL;
 
   // Logger.log(first_article)
   // Logger.log(first_article_URL)
   return {
-    output: side_bar_content,
+    output: first_three,
   };
 }
 
@@ -204,6 +221,14 @@ function fetchIndividualKeyword(keyword) {
           url: data.articles[i].url,
         });
       }
+
+      while (first_three.length < 3) {
+        first_three.push({
+          title: "No data available :( ... back to work",
+          url: ""
+        });
+      }
+
     } else {
       Logger.log("No results found");
       return;
