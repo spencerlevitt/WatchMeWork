@@ -32,6 +32,16 @@
     .width-100 {
       width: 100%;
     }
+    .search-container button {
+      float: right;
+      padding: 6px 10px;
+      margin-top: 8px;
+      margin-right: 16px;
+      background: #ddd;
+      font-size: 17px;
+      border: none;
+      cursor: pointer;
+    }
     </style>
   </head>
   <body>
@@ -39,23 +49,10 @@
       <form>
         <div class="block form-inline">
           <input type="text" placeholder="Search..." style="border-radius:10px" size="32px" id="search-term">
-          <span class="fa fa-search" style="color:blue; border-radius:10px"></span>
+          <button id="search-icon"><i class="fa fa-search"></i></button>
         </div>
         <div class="block form-group">
-          <p style="font-size:15px"><b>Topics</b></p>
-          <p style="display: inline-block">
-            <i class="fa fa-star"></i>
-            <b>&emsp;<a>Cholesterol</a></b>
-            <br><i>&emsp;&emsp;You wrote about this.</i>
-          </p>
-          <p style="display: inline-block">
-            <i class="fa fa-star"></i>
-            <b>&emsp;<a>Atheroscierosis</a></b>
-            <br><i>&emsp;&emsp;Suggested.</i>
-          </p>
-        </div>
-        <div class="block form-group">
-          <label for="research-text" style="font-size:15px"><b>Research</b></label>
+          <label for="research-text" style="font-size:15px" id="research-term"><b>Research: Searching for Term</b></label>
           <p class="width-100" id="research-article-0" style="font-size:15px"><b>Article 1</b></p>
           <p class="width-100" id="research-text-0" rows="10"> Learn more about your project. </p>
           <a id='research-URL-0'> </a>
@@ -73,19 +70,17 @@
         <div class="block" id="button-bar" style="text-align:center">
           <button class="blue" id="run-research">WatchMeWork!</button>
         </div>
-        
         <div class="block form-group">
-          <p style="font-size:15px"><b>Related Terms</b></p>
+          <p style="font-size:15px"><b>Other Topics</b></p>
           <p style="display: inline-block">
             <i class="fa fa-star"></i>
-            <b>&emsp;<a id="related-0">Related Topic Here.</a></b>
-            <br><i>&emsp;&emsp;Suggested.</i>
+            <b>&emsp;<a id="topic-0">Topic 1</a></b>
+            <br><i>&emsp;&emsp;You wrote about this.</i>
           </p>
-          <br>
           <p style="display: inline-block">
             <i class="fa fa-star"></i>
-            <b>&emsp;<a id="related-1">Related Topic Here.</a></b>
-            <br><i>&emsp;&emsp;Suggested.</i>
+            <b>&emsp;<a id="topic-1">Topic 2</a></b>
+            <br><i>&emsp;&emsp;You wrote about this.</i>
           </p>
         </div>
       </form>
@@ -98,9 +93,45 @@
        * user's origin and destination language preferences if previously set.
        */
       $(function() {
+        setTopics();
+        $('#run-research').click(setResearchTermTopicZero);
         $('#run-research').click(runResearch);
-        $('#run-research').click(runRelated);
+        $('#topic-0').click(getArticlesTopicOne);
+        $('#topic-1').click(getArticlesTopicTwo);
       });
+
+      function setTopics() {
+        google.script.run
+            .withSuccessHandler(
+              function(related) {
+                $('#topic-0').text(related[1].name);
+                $('#topic-1').text(related[2].name);
+              })
+            .withFailureHandler(
+              function(msg, element) {
+                showError(msg, $('#button-bar'));
+              })
+            .withUserObject(this)
+            .getKeywords()
+      }
+
+      function setResearchTermTopicZero() {
+        this.disabled = true;
+        $('#error').remove();
+        google.script.run
+            .withSuccessHandler(
+              function(research, element) {
+                $('#research-term').text("Research: Searching for " + research[0].name);
+                element.disabled = false;
+              })
+            .withFailureHandler(
+              function(msg, element) {
+                showError(msg, $('#button-bar'));
+                element.disabled = false;
+              })
+            .withUserObject(this)
+            .getKeywords();
+      }
 
       /**
        * Runs a server-side function to research the text and update
@@ -109,23 +140,29 @@
       function runResearch() {
         this.disabled = true;
         $('#error').remove();
-        var origin = $('input[name=origin]:checked').val();
-        var dest = $('input[name=dest]:checked').val();
-        var savePrefs = $('#save-prefs').is(':checked');
         google.script.run
             .withSuccessHandler(
               function(research, element) {
                 $('#research-text-0').text(research.output[0].title);
                 $('#research-URL-0').text('Read More!');
                 $('#research-URL-0').attr("href", research.output[0].url);
+                $('#research-URL-0').attr("target", "_blank");
 
                 $('#research-text-1').text(research.output[1].title);
                 $('#research-URL-1').text('Read More!');
                 $('#research-URL-1').attr("href", research.output[1].url);
+                $('#research-URL-1').attr("target", "_blank");
 
+                $('#research-text-2').text($('#search-term').val());
                 $('#research-text-2').text(research.output[2].title);
                 $('#research-URL-2').text('Read More!');
                 $('#research-URL-2').attr("href", research.output[2].url);
+                $('#research-URL-2').attr("target", "_blank");
+
+                if ($('#search-term').val()) {
+                  $('#research-term').text("Research: Searching for " + $('#search-term').val());
+                }
+
                 element.disabled = false;
               })
             .withFailureHandler(
@@ -134,27 +171,77 @@
                 element.disabled = false;
               })
             .withUserObject(this)
-            .getResearch(); //returns an array [article_description, article_url]
+            .getResearch($('#search-term').val()); //returns an array [article_description, article_url]
       }
 
-      function runRelated() {
+      function getArticlesTopicOne() {
+        this.disabled = true;
+        $('#error').remove();
         google.script.run
             .withSuccessHandler(
-              function(related) {
-                $('#related-0').text(related.output[0].title);
-                $('#related-0').attr("href", related.output[0].url);
+              function(articles, element) {
+                $('#research-text-0').text(articles[0].title);
+                $('#research-URL-0').text('Read More!');
+                $('#research-URL-0').attr("href", articles[0].url);
+                $('#research-URL-0').attr("target", "_blank");
 
-                $('#related-1').text(related.output[1].title);
-                $('#related-1').attr("href", related.output[1].url);
+                $('#research-text-1').text(articles[1].title);
+                $('#research-URL-1').text('Read More!');
+                $('#research-URL-1').attr("href", articles[1].url);
+                $('#research-URL-1').attr("target", "_blank");
+
+                $('#research-text-2').text(articles[2].title);
+                $('#research-URL-2').text('Read More!');
+                $('#research-URL-2').attr("href", articles[2].url);
+                $('#research-URL-2').attr("target", "_blank");
+
+                $('#research-term').text("Research: Searching for " + $('#topic-0').text());
+
+                element.disabled = false;
               })
             .withFailureHandler(
               function(msg, element) {
                 showError(msg, $('#button-bar'));
+                element.disabled = false;
               })
             .withUserObject(this)
-            .fetchIndividualKeyword($('#search-term').val());
+            .fetchIndividualKeyword($('#topic-0').text());
       }
- 
+
+      function getArticlesTopicTwo() {
+        this.disabled = true;
+        $('#error').remove();
+        google.script.run
+            .withSuccessHandler(
+              function(articles, element) {
+                $('#research-text-0').text(articles[0].title);
+                $('#research-URL-0').text('Read More!');
+                $('#research-URL-0').attr("href", articles[0].url);
+                $('#research-URL-0').attr("target", "_blank");
+
+                $('#research-text-1').text(articles[1].title);
+                $('#research-URL-1').text('Read More!');
+                $('#research-URL-1').attr("href", articles[1].url);
+                $('#research-URL-1').attr("target", "_blank");
+
+                $('#research-text-2').text(articles[2].title);
+                $('#research-URL-2').text('Read More!');
+                $('#research-URL-2').attr("href", articles[2].url);
+                $('#research-URL-2').attr("target", "_blank");
+
+                $('#research-term').text("Research: Searching for " + $('#topic-1').text());
+
+                element.disabled = false;
+              })
+            .withFailureHandler(
+              function(msg, element) {
+                showError(msg, $('#button-bar'));
+                element.disabled = false;
+              })
+            .withUserObject(this)
+            .fetchIndividualKeyword($('#topic-1').text());
+      }
+
     </script>
 
     

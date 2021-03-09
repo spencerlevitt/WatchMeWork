@@ -104,7 +104,7 @@ function getElementInfo(element) {
  *
  * @return {Object} Object containing the output of the research.
  */
-function getResearch() {
+function getResearch(searchTerm) {
   Logger.log(getDocumentInfo());
 
   var total_doc = getDocumentInfo();
@@ -112,7 +112,9 @@ function getResearch() {
   var side_bar_content = [];
   var documentProperties = PropertiesService.getDocumentProperties();
 
-  if (total_doc.selection) {
+  if (searchTerm) {
+    search_input = searchTerm;
+  } else if (total_doc.selection) {
     Logger.log("element is selected");
     var start = total_doc.selection.selectedElements[0].startOffset;
     var end = total_doc.selection.selectedElements[0].endOffsetInclusive;
@@ -222,12 +224,12 @@ function fetchIndividualKeyword(keyword) {
         });
       }
 
-      while (first_three.length < 3) {
-        first_three.push({
-          title: "No data available :( ... back to work",
-          url: ""
-        });
-      }
+      // while (first_three.length < 3) {
+      //   first_three.push({
+      //     title: "No data available :( ... back to work",
+      //     url: ""
+      //   });
+      // }
 
     } else {
       Logger.log("No results found");
@@ -250,9 +252,6 @@ function fetchIndividualKeyword(keyword) {
     keywordArr[arrIndex].articles = first_three;
     Logger.log(keywordArr);
     documentProperties.setProperty("KEYWORD_ARR", JSON.stringify(keywordArr));
+    return keywordArr[arrIndex].articles;
   }
-
-  return {
-    output: first_three
-  };
 }
