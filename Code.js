@@ -124,7 +124,7 @@ function getResearch(searchTerm) {
   } else {
     Logger.log("no element is selected, look at all text.");
     var allText = DocumentApp.getActiveDocument().getText();
-    const keywords = AppLib.getTopics(allText);
+    let keywords = AppLib.getTopics(allText);
     Logger.log("----ALL KEYWORDS IDENTIFIED: " + keywords);
     Logger.log("KEYWORDS[0]: " + keywords[0]);
     search_input = keywords[0];
@@ -136,7 +136,7 @@ function getResearch(searchTerm) {
 
   Logger.log(search_input);
 
-  let url = `https://newsapi.org/v2/everything?q=${search_input}&from=2021-02-21&to=2021-02-21&sortBy=popularity&apiKey=8738aed08efc43b4869f63671fdcfdb3&language=en`;
+  let url = `https://newsapi.org/v2/everything?q=${search_input}&from=2021-02-21&to=2021-02-21&sortBy=popularity&apiKey=98bc9a2f55174addbd6375d137cd5ed6&language=en`;
 
   Logger.log(url);
 
@@ -196,6 +196,7 @@ function getResearch(searchTerm) {
   // Logger.log(first_article_URL)
   return {
     output: first_three,
+    search_input
   };
 }
 
@@ -212,7 +213,7 @@ function fetchIndividualKeyword(keyword) {
   let url;
   let first_three = [];
   try {
-    url = `https://newsapi.org/v2/everything?q=${searchTerm}&from=2021-02-21&to=2021-02-21&sortBy=popularity&apiKey=8738aed08efc43b4869f63671fdcfdb3&language=en`;
+    url = `https://newsapi.org/v2/everything?q=${searchTerm}&from=2021-02-21&to=2021-02-21&sortBy=popularity&apiKey=98bc9a2f55174addbd6375d137cd5ed6&language=en`;
     var response = UrlFetchApp.fetch(url);
     var json = response.getContentText();
     var data = JSON.parse(json);

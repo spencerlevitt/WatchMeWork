@@ -32,16 +32,6 @@
     .width-100 {
       width: 100%;
     }
-    .search-container button {
-      float: right;
-      padding: 6px 10px;
-      margin-top: 8px;
-      margin-right: 16px;
-      background: #ddd;
-      font-size: 17px;
-      border: none;
-      cursor: pointer;
-    }
     </style>
   </head>
   <body>
@@ -49,7 +39,7 @@
       <form>
         <div class="block form-inline">
           <input type="text" placeholder="Search..." style="border-radius:10px" size="32px" id="search-term">
-          <button id="search-icon"><i class="fa fa-search"></i></button>
+          <i class="fa fa-search"></i>
         </div>
         <div class="block form-group">
           <label for="research-text" style="font-size:15px" id="research-term"><b>Research: Searching for Term</b></label>
@@ -93,9 +83,10 @@
        * user's origin and destination language preferences if previously set.
        */
       $(function() {
-        setTopics();
-        $('#run-research').click(setResearchTermTopicZero);
+        //setTopics();
+        // $('#run-research').click(setResearchTermTopicZero);
         $('#run-research').click(runResearch);
+        $('#run-research').click(setTopics);
         $('#topic-0').click(getArticlesTopicOne);
         $('#topic-1').click(getArticlesTopicTwo);
       });
@@ -115,23 +106,23 @@
             .getKeywords()
       }
 
-      function setResearchTermTopicZero() {
-        this.disabled = true;
-        $('#error').remove();
-        google.script.run
-            .withSuccessHandler(
-              function(research, element) {
-                $('#research-term').text("Research: Searching for " + research[0].name);
-                element.disabled = false;
-              })
-            .withFailureHandler(
-              function(msg, element) {
-                showError(msg, $('#button-bar'));
-                element.disabled = false;
-              })
-            .withUserObject(this)
-            .getKeywords();
-      }
+      // function setResearchTermTopicZero() {
+      //   this.disabled = true;
+      //   $('#error').remove();
+      //   google.script.run
+      //       .withSuccessHandler(
+      //         function(research, element) {
+      //           $('#research-term').text("Research: Searching for " + research[0].name);
+      //           element.disabled = false;
+      //         })
+      //       .withFailureHandler(
+      //         function(msg, element) {
+      //           showError(msg, $('#button-bar'));
+      //           element.disabled = false;
+      //         })
+      //       .withUserObject(this)
+      //       .getKeywords();
+      // }
 
       /**
        * Runs a server-side function to research the text and update
@@ -153,15 +144,17 @@
                 $('#research-URL-1').attr("href", research.output[1].url);
                 $('#research-URL-1').attr("target", "_blank");
 
-                $('#research-text-2').text($('#search-term').val());
+                // $('#research-text-2').text($('#search-term').val());
                 $('#research-text-2').text(research.output[2].title);
                 $('#research-URL-2').text('Read More!');
                 $('#research-URL-2').attr("href", research.output[2].url);
                 $('#research-URL-2').attr("target", "_blank");
 
-                if ($('#search-term').val()) {
-                  $('#research-term').text("Research: Searching for " + $('#search-term').val());
-                }
+                // if ($('#search-term').val()) {
+                //   $('#research-term').text("Research: Searching for " + $('#search-term').val());
+                // }
+
+                $('#research-term').text("Showing results for " + research.search_input);
 
                 element.disabled = false;
               })
@@ -195,7 +188,7 @@
                 $('#research-URL-2').attr("href", articles[2].url);
                 $('#research-URL-2').attr("target", "_blank");
 
-                $('#research-term').text("Research: Searching for " + $('#topic-0').text());
+                $('#research-term').text("Showing results for " + $('#topic-0').text());
 
                 element.disabled = false;
               })
@@ -211,6 +204,7 @@
       function getArticlesTopicTwo() {
         this.disabled = true;
         $('#error').remove();
+        $('#research-term').text("Showing results for " + $('#topic-1').text());
         google.script.run
             .withSuccessHandler(
               function(articles, element) {
@@ -229,7 +223,7 @@
                 $('#research-URL-2').attr("href", articles[2].url);
                 $('#research-URL-2').attr("target", "_blank");
 
-                $('#research-term').text("Research: Searching for " + $('#topic-1').text());
+                $('#research-term').text("Showing results for " + $('#topic-1').text());
 
                 element.disabled = false;
               })
