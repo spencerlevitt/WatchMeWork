@@ -64,12 +64,12 @@
           <p style="font-size:15px"><b>Other Topics</b></p>
           <p style="display: inline-block">
             <i class="fa fa-star"></i>
-            <b>&emsp;<a id="topic-0">Topic 1</a></b>
+            <b>&emsp;<a id="topic-1">Topic 1</a></b>
             <br><i>&emsp;&emsp;You wrote about this.</i>
           </p>
           <p style="display: inline-block">
             <i class="fa fa-star"></i>
-            <b>&emsp;<a id="topic-1">Topic 2</a></b>
+            <b>&emsp;<a id="topic-2">Topic 2</a></b>
             <br><i>&emsp;&emsp;You wrote about this.</i>
           </p>
         </div>
@@ -79,24 +79,25 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script>
       /**
-       * On document load, assign click handlers to each button and try to load the
-       * user's origin and destination language preferences if previously set.
+       * On document load, assign click handlers to each button.
        */
       $(function() {
-        //setTopics();
-        // $('#run-research').click(setResearchTermTopicZero);
         $('#run-research').click(runResearch);
         $('#run-research').click(setTopics);
-        $('#topic-0').click(getArticlesTopicOne);
-        $('#topic-1').click(getArticlesTopicTwo);
+        $('#topic-1').click(getArticlesTopicOne);
+        $('#topic-2').click(getArticlesTopicTwo);
       });
 
+      /**
+       * Retrieves the keywords through a server-side function and
+       * replaces the placeholder Topics text with keywords.
+       */
       function setTopics() {
         google.script.run
             .withSuccessHandler(
               function(related) {
-                $('#topic-0').text(related[1].name);
-                $('#topic-1').text(related[2].name);
+                $('#topic-1').text(related[1].name);
+                $('#topic-2').text(related[2].name);
               })
             .withFailureHandler(
               function(msg, element) {
@@ -106,27 +107,12 @@
             .getKeywords()
       }
 
-      // function setResearchTermTopicZero() {
-      //   this.disabled = true;
-      //   $('#error').remove();
-      //   google.script.run
-      //       .withSuccessHandler(
-      //         function(research, element) {
-      //           $('#research-term').text("Research: Searching for " + research[0].name);
-      //           element.disabled = false;
-      //         })
-      //       .withFailureHandler(
-      //         function(msg, element) {
-      //           showError(msg, $('#button-bar'));
-      //           element.disabled = false;
-      //         })
-      //       .withUserObject(this)
-      //       .getKeywords();
-      // }
-
       /**
-       * Runs a server-side function to research the text and update
-       * the sidebar UI with the resulting research.
+       * Runs a server-side function to research the text and updates
+       * the sidebar UI (articles) with the resulting research. Identifies
+       * articles based on search input, then element selection. If
+       * neither are present, then the keyword extracted from entire document,
+       * updating with articles relevant to that keyword.
        */
       function runResearch() {
         this.disabled = true;
@@ -144,15 +130,10 @@
                 $('#research-URL-1').attr("href", research.output[1].url);
                 $('#research-URL-1').attr("target", "_blank");
 
-                // $('#research-text-2').text($('#search-term').val());
                 $('#research-text-2').text(research.output[2].title);
                 $('#research-URL-2').text('Read More!');
                 $('#research-URL-2').attr("href", research.output[2].url);
                 $('#research-URL-2').attr("target", "_blank");
-
-                // if ($('#search-term').val()) {
-                //   $('#research-term').text("Research: Searching for " + $('#search-term').val());
-                // }
 
                 $('#research-term').text("Showing results for " + research.search_input);
 
@@ -164,44 +145,14 @@
                 element.disabled = false;
               })
             .withUserObject(this)
-            .getResearch($('#search-term').val()); //returns an array [article_description, article_url]
+            .getResearch($('#search-term').val());
       }
 
+      /**
+       * Retrieves the articles through a server-side function and
+       * updates the article list with articles relevant to first topic.
+       */
       function getArticlesTopicOne() {
-        this.disabled = true;
-        $('#error').remove();
-        google.script.run
-            .withSuccessHandler(
-              function(articles, element) {
-                $('#research-text-0').text(articles[0].title);
-                $('#research-URL-0').text('Read More!');
-                $('#research-URL-0').attr("href", articles[0].url);
-                $('#research-URL-0').attr("target", "_blank");
-
-                $('#research-text-1').text(articles[1].title);
-                $('#research-URL-1').text('Read More!');
-                $('#research-URL-1').attr("href", articles[1].url);
-                $('#research-URL-1').attr("target", "_blank");
-
-                $('#research-text-2').text(articles[2].title);
-                $('#research-URL-2').text('Read More!');
-                $('#research-URL-2').attr("href", articles[2].url);
-                $('#research-URL-2').attr("target", "_blank");
-
-                $('#research-term').text("Showing results for " + $('#topic-0').text());
-
-                element.disabled = false;
-              })
-            .withFailureHandler(
-              function(msg, element) {
-                showError(msg, $('#button-bar'));
-                element.disabled = false;
-              })
-            .withUserObject(this)
-            .fetchIndividualKeyword($('#topic-0').text());
-      }
-
-      function getArticlesTopicTwo() {
         this.disabled = true;
         $('#error').remove();
         $('#research-term').text("Showing results for " + $('#topic-1').text());
@@ -223,8 +174,6 @@
                 $('#research-URL-2').attr("href", articles[2].url);
                 $('#research-URL-2').attr("target", "_blank");
 
-                $('#research-term').text("Showing results for " + $('#topic-1').text());
-
                 element.disabled = false;
               })
             .withFailureHandler(
@@ -234,6 +183,43 @@
               })
             .withUserObject(this)
             .fetchIndividualKeyword($('#topic-1').text());
+      }
+
+      /**
+       * Retrieves the articles through a server-side function and
+       * updates the article list with articles relevant to second topic.
+       */
+      function getArticlesTopicTwo() {
+        this.disabled = true;
+        $('#error').remove();
+        $('#research-term').text("Showing results for " + $('#topic-2').text());
+        google.script.run
+            .withSuccessHandler(
+              function(articles, element) {
+                $('#research-text-0').text(articles[0].title);
+                $('#research-URL-0').text('Read More!');
+                $('#research-URL-0').attr("href", articles[0].url);
+                $('#research-URL-0').attr("target", "_blank");
+
+                $('#research-text-1').text(articles[1].title);
+                $('#research-URL-1').text('Read More!');
+                $('#research-URL-1').attr("href", articles[1].url);
+                $('#research-URL-1').attr("target", "_blank");
+
+                $('#research-text-2').text(articles[2].title);
+                $('#research-URL-2').text('Read More!');
+                $('#research-URL-2').attr("href", articles[2].url);
+                $('#research-URL-2').attr("target", "_blank");
+
+                element.disabled = false;
+              })
+            .withFailureHandler(
+              function(msg, element) {
+                showError(msg, $('#button-bar'));
+                element.disabled = false;
+              })
+            .withUserObject(this)
+            .fetchIndividualKeyword($('#topic-2').text());
       }
 
     </script>

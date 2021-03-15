@@ -9,6 +9,9 @@
   Logger.log(AppLib.getTodaysDateLongForm());
 }
 
+/**
+ * Test function to retrieve text from document and identify if keywords are extracted properly.
+ */
 function testKeywordExtraction() {
   /*Logger.log(
     AppLib.getKeywords(
@@ -23,6 +26,9 @@ function testKeywordExtraction() {
   Logger.log(text);
 }
 
+/**
+ * Test function to identify key words (main topics).
+ */
 function testGetTopics() {
   Logger.log(
     AppLib.getTopics(
@@ -100,16 +106,19 @@ function getElementInfo(element) {
 }
 
 /**
- * Retrieves research output.
- *
- * @return {Object} Object containing the output of the research.
+ * Retrieves research output. The argument, if available, is used for search querying. If not,
+ * the function checks for whether an element is selected to use for search querying.
+ * If neither is the case, the function scans the document and constructs an output.
+ * @param {string} searchTerm Term for the search input. Can be NULL.
+ * @return {Object} output List containing the output of the research with {title, attributes}
+ *         {string} search_input Contains the search query, either searchTerm, element selected, or
+ *                  first keyword from entire document.
  */
 function getResearch(searchTerm) {
   Logger.log(getDocumentInfo());
 
   var total_doc = getDocumentInfo();
   var search_input = "";
-  var side_bar_content = [];
   var documentProperties = PropertiesService.getDocumentProperties();
 
   if (searchTerm) {
@@ -145,8 +154,6 @@ function getResearch(searchTerm) {
   var data = JSON.parse(json);
 
   if (data.totalResults == 0) {
-    // side_bar_content = ["No data available :( ... back to work ", ""];
-    // Logger.log(side_bar_content);
     let first_three = [];
     while (first_three.length < 3) {
       first_three.push({
@@ -154,16 +161,11 @@ function getResearch(searchTerm) {
         url: ""
     });
     }
-    // return {
-    //   output: side_bar_content,
-    // };
     return {
       output: first_three,
     };
   }
 
-  var first_article = data.articles[0].description;
-  var first_article_URL = data.articles[0].url;
   let first_three = [];
 
   for (let i = 0; i < data.totalResults && i < 3; i++) {
@@ -189,17 +191,16 @@ function getResearch(searchTerm) {
     });
   }
 
-  // side_bar_content[0] = first_article;
-  // side_bar_content[1] = first_article_URL;
-
-  // Logger.log(first_article)
-  // Logger.log(first_article_URL)
   return {
     output: first_three,
     search_input
   };
 }
 
+/**
+ * Gets keywords from document.
+ * @return {String} The keywords.
+ */
 function getKeywords() {
   var documentProperties = PropertiesService.getDocumentProperties();
   var keywordArr = documentProperties.getProperty("KEYWORD_ARR");
@@ -207,6 +208,11 @@ function getKeywords() {
   return JSON.parse(keywordArr);
 }
 
+/**
+ * Fetches articles for specific keywords.
+ * @param {string} keyword The keyword.
+ * @return {Object} List of articles in format {string title, string url} for given keyword.
+ */
 function fetchIndividualKeyword(keyword) {
   var documentProperties = PropertiesService.getDocumentProperties();
   let searchTerm = keyword;
@@ -224,14 +230,6 @@ function fetchIndividualKeyword(keyword) {
           url: data.articles[i].url,
         });
       }
-
-      // while (first_three.length < 3) {
-      //   first_three.push({
-      //     title: "No data available :( ... back to work",
-      //     url: ""
-      //   });
-      // }
-
     } else {
       Logger.log("No results found");
       return;
